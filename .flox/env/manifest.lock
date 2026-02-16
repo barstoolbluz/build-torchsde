@@ -1,0 +1,19 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "version": 1,
+    "hook": {
+      "on-activate": "echo \"\"\necho \"TorchSDE Build Environment\"\necho \"\"\necho \"This environment builds torchsde without torch in closure.\"\necho \"torch is provided at runtime by build-pytorch.\"\necho \"\"\necho \"Available builds:\"\necho \"  flox build torchsde-python313\"\necho \"\"\n"
+    },
+    "profile": {},
+    "options": {
+      "systems": [
+        "aarch64-darwin",
+        "aarch64-linux",
+        "x86_64-darwin",
+        "x86_64-linux"
+      ]
+    }
+  },
+  "packages": []
+}
