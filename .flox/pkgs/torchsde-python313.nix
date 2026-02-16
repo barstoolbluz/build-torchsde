@@ -16,7 +16,7 @@ let
     config = { allowUnfree = true; };
   };
 
-in nixpkgs_pinned.python3Packages.torchsde.overrideAttrs (oldAttrs: {
+in nixpkgs_pinned.python3Packages.torchsde.overridePythonAttrs (oldAttrs: {
   pname = "torchsde-python313";
 
   # Remove torch from propagated deps — torch is provided by the runtime
@@ -25,9 +25,18 @@ in nixpkgs_pinned.python3Packages.torchsde.overrideAttrs (oldAttrs: {
     (p: (p.pname or "") != "torch")
     (oldAttrs.propagatedBuildInputs or []);
 
-  # torchsde imports torch at module level; skip check since torch
-  # isn't in this derivation's closure
+  # Add the relax-deps hook so pythonRemoveDeps is actually processed,
+  # then strip torch from the wheel metadata so pythonRuntimeDepsCheckHook
+  # doesn't fail when torch isn't in this derivation's closure
+  nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [
+    nixpkgs_pinned.python3Packages.pythonRelaxDepsHook
+  ];
+  pythonRemoveDeps = [ "torch" ];
+
+  # torchsde imports torch at module level; skip both the import check
+  # and tests since torch isn't in this derivation's closure
   pythonImportsCheck = [];
+  doCheck = false;
 
   postInstall = (oldAttrs.postInstall or "") + ''
     echo 1 > $out/.metadata-rev
