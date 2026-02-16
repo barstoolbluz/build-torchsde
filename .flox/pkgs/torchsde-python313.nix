@@ -43,6 +43,6 @@ in nixpkgs_pinned.python3Packages.torchsde.overridePythonAttrs (oldAttrs: {
   '';
 
   meta = oldAttrs.meta // {
-    description = "TorchSDE (differentiable SDE solvers) without torch in closure";
+    description = "TorchSDE without bundled torch — avoids ABI conflicts when torch is provided by the environment";
   };
 })
